@@ -27,7 +27,7 @@ console.log("Clerk Webhook event received:", data);
     name: `${data.first_name} ${data.last_name}`,
     email: data.email_addresses[0].email_address,
     image: data.image_url,
-    address: data.address,
+
   };
 
   await connectDB();
