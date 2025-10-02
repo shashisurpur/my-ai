@@ -21,12 +21,13 @@ export async function POST(req) {
   const { data, type } = wh.verify(body, svixHeader);
 
   // Prepare the user data to be saved in db
-
+console.log("Clerk Webhook event received:", data);
   const userData = {
     _id: data.id,
     name: `${data.first_name} ${data.last_name}`,
     email: data.email_addresses[0].email_address,
     image: data.image_url,
+    address: data.address,
   };
 
   await connectDB();
