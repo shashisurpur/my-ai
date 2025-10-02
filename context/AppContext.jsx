@@ -1,6 +1,8 @@
 "use client";
-import { useUser } from "@clerk/nextjs";
-import { createContext, useContext } from "react";
+import { useAuth, useUser } from "@clerk/nextjs";
+import axios from "axios";
+import { createContext, useContext, useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 export const AppContext = createContext();
 
@@ -11,8 +13,77 @@ export const useAppContext = () => {
 export const AppContextProvider = ({ children }) => {
   const { user } = useUser();
 
+  const {getToken} = useAuth();
+
+  const [chats,setChats] = useState([]);
+  const [activeChat,setActiveChat] = useState(null);
+  const [loadingChats,setLoadingChats] = useState(false);
+
+  const createNewChat = async()=>{
+    try {
+      if(!user){
+        throw new Error("User not authenticated");
+        return null;
+      }
+      const token = await getToken();
+
+      await axios.post('/api/chat/create', {}, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      fetchUserChats();
+    } catch (error) {
+      toast.error(error.message || "Failed to create chat");
+    }
+  }
+
+  const fetchUserChats = async () => {
+    try {
+      const token = await getToken();
+
+      const { data } = await axios.get('/api/chat/get', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!data.success) {
+        toast.error(data.message || "Failed to fetch user chats");
+        return;
+      }
+      setChats(data.chats);
+      if(data.chats.length === 0){
+        await createNewChat();
+        return fetchUserChats();
+      }
+      setActiveChat(data.chats[0]);
+
+
+    } catch (error) {
+      toast.error(error.message || "Failed to fetch user chats");
+    }
+  }
+
+
+  useEffect(() => {
+    if (user) {
+      setLoadingChats(true);
+      fetchUserChats().finally(() => setLoadingChats(false));
+    } 
+  }, [user]);
+
   const value = {
     user,
+    chats,
+    setChats,
+    activeChat,
+    setActiveChat,
+    loadingChats,
+    createNewChat,
+    fetchUserChats,
+    
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

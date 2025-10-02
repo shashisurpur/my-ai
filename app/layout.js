@@ -1,7 +1,10 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
+import "./prism.css";
+
 import { ClerkProvider } from "@clerk/nextjs";
 import { AppContextProvider } from "@/context/AppContext";
+import { Toaster } from "react-hot-toast";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -27,6 +30,22 @@ export default function RootLayout({ children }) {
             // className={`${geistSans.variable} ${geistMono.variable} antialiased`}
             className={`${inter.className} antialiased`}
           >
+            <Toaster
+              toastOptions={{
+                success: {
+                  style: {
+                    background: "#333",
+                    color: "#fff"
+                  }
+                },
+                error: {
+                  style: {
+                    background: "red",
+                    color: "#fff"
+                  }
+                }
+              }}
+            />
             {children}
           </body>
         </html>

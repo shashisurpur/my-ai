@@ -11,6 +11,7 @@ export default async function connectDB() {
   }
   try {
     cashed.conn = await cashed.promise;
+    console.log("MongoDB connected");
   } catch (error) {
     console.error("Error connecting to mongoDb", error);
   }
