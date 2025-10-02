@@ -47,5 +47,5 @@ console.log("Clerk Webhook event received:", data);
       break;
   }
 
-  return NextRequest.json({ message: "Event Received" });
+  return NextResponse.json({ message: "Event Received" });
 }
