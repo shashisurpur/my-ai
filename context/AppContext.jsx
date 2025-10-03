@@ -11,19 +11,19 @@ export const useAppContext = () => {
 };
 
 export const AppContextProvider = ({ children }) => {
-  const { user,isLoaded } = useUser();
+  const { user, isLoaded } = useUser();
 
-  console.log("Clerk User:", user,isLoaded);
-  const {getToken} = useAuth();
+  console.log("Clerk User:", user, isLoaded);
+  const { getToken } = useAuth();
 
-  const [chats,setChats] = useState([]);
-  const [activeChat,setActiveChat] = useState(null);
-  const [freeRequests,setFreeRequests] = useState(0);
-  const [loadingChats,setLoadingChats] = useState(false);
+  const [chats, setChats] = useState([]);
+  const [activeChat, setActiveChat] = useState(null);
+  const [freeRequests, setFreeRequests] = useState(0);
+  const [loadingChats, setLoadingChats] = useState(false);
 
-  const createNewChat = async()=>{
+  const createNewChat = async () => {
     try {
-      if(!user){
+      if (!user) {
         throw new Error("User not authenticated");
         // return null;
       }
@@ -56,7 +56,7 @@ export const AppContextProvider = ({ children }) => {
         return;
       }
       setChats(data.chats);
-      if(data.chats.length === 0){
+      if (data.chats.length === 0) {
         await createNewChat();
         return fetchUserChats();
       }
@@ -68,24 +68,42 @@ export const AppContextProvider = ({ children }) => {
     }
   }
 
+  const getGuestLimit = async() => {
+    try{
+      const {data} = await axios.get('/api/limit')
+      console.log('Guest limit',data)
+      if(data.success){
+        setFreeRequests(data.requests)
+      }
+    }catch(error){
+      console.log(error,'Failed to get guest limit')
+    }
+  }
+
 
   useEffect(() => {
     if (user) {
       setLoadingChats(true);
       fetchUserChats();
     }
-    
-    if(!user){
+
+    if (!user) {
       // setLoadingChats(false)
       setActiveChat(null)
       setChats([])
-      
-    }
 
-    return()=>{
-      
-    } 
+    }
+    return () => {
+
+    }
   }, [user]);
+
+
+  useEffect(() => {
+    if (!user) {
+      getGuestLimit()
+    }
+  }, [])
 
   const value = {
     user,
@@ -99,6 +117,6 @@ export const AppContextProvider = ({ children }) => {
     freeRequests,
     setFreeRequests,
   };
-console.log(freeRequests,'free')
+  console.log(freeRequests, 'free')
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 };

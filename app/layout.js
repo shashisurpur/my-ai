@@ -26,6 +26,7 @@ export default function RootLayout({ children }) {
     <ClerkProvider>
       <AppContextProvider>
         <html lang="en">
+          
           <body
             // className={`${geistSans.variable} ${geistMono.variable} antialiased`}
             className={`${inter.className} antialiased`}

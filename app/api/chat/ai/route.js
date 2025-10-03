@@ -57,7 +57,7 @@ export async function POST(req) {
             }
             
             if(guest.count > MAX_TOKENS_LIMT){
-                return NextResponse.json({ success: false, message: 'Reached daily limit',requests:MAX_TOKENS_LIMT }, { status: 429 })
+                return NextResponse.json({ success: false, message: 'Daily limit exceeds. Please login to continue...',requests:MAX_TOKENS_LIMT }, { status: 429 })
             }
             const response = await ai.models.generateContent({
                 model: "gemini-2.5-flash",
