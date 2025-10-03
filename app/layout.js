@@ -17,7 +17,7 @@ const inter = Inter({
 // });
 
 export const metadata = {
-  title: "DeepSeek",
+  title: "CHATAI",
   description: "Full Stack Project",
 };
 
