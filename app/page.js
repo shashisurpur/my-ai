@@ -1,6 +1,7 @@
 "use client";
 
 import { assets } from "@/assets/assets";
+import Header from "@/components/Header";
 import Message from "@/components/Message";
 import PromptBox from "@/components/PromptBox";
 import Sidebar from "@/components/Sidebar";
@@ -13,7 +14,7 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [messages, setMessages] = useState([]);
 
-  const { activeChat } = useAppContext();
+  const { activeChat,freeRequests } = useAppContext();
   const containerRef = useRef(null);
 
   useEffect(() => {
@@ -31,31 +32,41 @@ export default function Home() {
     }
   }, [activeChat]);
 
+
+
   return (
     <div className="flex h-screen">
       {/* Sidebar */}
       <Sidebar expand={expand} setExpand={setExpand} />
       <div className="flex-1 flex flex-col items-center justify-center px-4 pb-8 bg-[#292a2d] text-white relative">
-        <div className="md:hidden absolute px-4 top-6 flex items-center justify-between w-full">
-          <Image
-            onClick={() => (expand ? setExpand(false) : setExpand(true))}
-            className="rotate-180"
-            alt=""
-            src={assets.menu_icon}
-          />
-          <Image className=" opacity-70" alt="" src={assets.chat_icon} />
-        </div>
+        {/* <div className="absolute px-4 top-6 flex items-center justify-between w-full">
+          <div className="md:hidden">
+            <Image
+              onClick={() => (expand ? setExpand(false) : setExpand(true))}
+              className="rotate-180"
+              alt=""
+              src={assets.menu_icon}
+            />
+          </div>
+
+          <Header />
+          <div className="md:hidden ">
+            <Image className=" opacity-70" alt="" src={assets.chat_icon} />
+          </div>
+
+        </div> */}
+        <Header expand={expand} setExpand={setExpand} />
         {messages.length === 0 ? (
           <>
             <div className="flex items-center gap-3">
               <Image src={assets.logo_icon} alt="" className="h-16" />
-              <p className="text-2xl font-medium">Hi I am DeepSeek</p>
+              <p className="text-2xl font-medium">Hi I am AI Assistant</p>
             </div>
             <p className="text-sm mt-2">How can I help you?</p>
           </>
         ) : (
           <div ref={containerRef}
-          className="relative flex flex-col items-center justify-start w-full mt-20 max-h-screen overflow-y-auto"
+            className="relative flex flex-col items-center justify-start w-full mt-20 max-h-screen overflow-y-auto"
           >
             <p className="flex top-8 border border-transparent hover:border-gray-500/50 py-1 px-2 rounded-lg font-semibold mb-6">{activeChat.name}</p>
             {
@@ -66,12 +77,12 @@ export default function Home() {
             {/* <Message role={"user"} content={"what is js"} /> */}
             {
               loading && (
-                <div 
-                className="flex gap-4 max-w-3xl w-full py-3"
+                <div
+                  className="flex gap-4 max-w-3xl w-full py-3"
                 >
-                  <Image 
-                  className="h-9 w-9 p-1 border border-white/15 rounded-full"
-                  src={assets.logo_icon} alt="logo icon" />
+                  <Image
+                    className="h-9 w-9 p-1 border border-white/15 rounded-full"
+                    src={assets.logo_icon} alt="logo icon" />
                   <div className="loader flex justify-center items-center gap-1">
                     <div className="w-1 h-1 rounded-full bg-white animate-bounce"></div>
                     <div className="w-1 h-1 rounded-full bg-white animate-bounce"></div>

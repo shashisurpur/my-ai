@@ -1,14 +1,17 @@
+"use client";
 import { assets } from "@/assets/assets";
 import { useAppContext } from "@/context/AppContext";
 import { useClerk, UserButton } from "@clerk/nextjs";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import ChatLabel from "./ChatLabel";
 
 const Sidebar = ({ expand, setExpand }) => {
   const { openSignIn } = useClerk();
   const { user,chats,createNewChat } = useAppContext();
   const [openMenu, setOpenMenu] = useState({ id: 0, open: false });
+
+  useEffect(() => {}, [user]);
 
   return (
     <div
@@ -25,7 +28,9 @@ const Sidebar = ({ expand, setExpand }) => {
           <Image
             className={`${expand ? "w-36" : "w-10"}`}
             alt=""
-            src={expand ? assets.logo_text : assets.logo_icon}
+            // src={expand ? assets.logo_text : assets.logo_icon}
+            src={expand ? assets.my_logo : assets.logo_icon}
+
           />
           <div
             onClick={() => (expand ? setExpand(false) : setExpand(true))}
@@ -89,7 +94,8 @@ const Sidebar = ({ expand, setExpand }) => {
       </div>
 
       <div>
-        <div
+        {/* qr code */}
+        {/* <div
           className={`flex items-center cursor-pointer group relative ${
             expand
               ? "gap-1 text-white/80 text-sm p-2.5 border border-primary rounded-lg hover:bg-white/10 cursor-pointer"
@@ -121,7 +127,7 @@ const Sidebar = ({ expand, setExpand }) => {
               <span>Get App</span> <Image src={assets.new_icon} alt="" />{" "}
             </>
           )}
-        </div>
+        </div> */}
 
         <div
           onClick={user ? null : openSignIn}

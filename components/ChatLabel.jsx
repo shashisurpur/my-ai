@@ -1,5 +1,6 @@
 import { assets } from "@/assets/assets";
 import { useAppContext } from "@/context/AppContext";
+import axios from "axios";
 import { set } from "mongoose";
 import Image from "next/image";
 import React from "react";
