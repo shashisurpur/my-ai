@@ -14,13 +14,17 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [messages, setMessages] = useState([]);
 
-  const { activeChat,freeRequests } = useAppContext();
+  const { activeChat,freeRequests,loadingChats } = useAppContext();
   const containerRef = useRef(null);
+console.log(activeChat,'activeChats')
 
   useEffect(() => {
     if (activeChat) {
       setMessages(activeChat.messages);
+    }else{
+      setMessages([])
     }
+    
   }, [activeChat]);
 
   useEffect(() => {
@@ -56,7 +60,7 @@ export default function Home() {
 
         </div> */}
         <Header expand={expand} setExpand={setExpand} />
-        {messages.length === 0 ? (
+        {messages.length === 0 && !activeChat? (
           <>
             <div className="flex items-center gap-3">
               <Image src={assets.logo_icon} alt="" className="h-16" />
@@ -68,9 +72,9 @@ export default function Home() {
           <div ref={containerRef}
             className="relative flex flex-col items-center justify-start w-full mt-20 max-h-screen overflow-y-auto"
           >
-            <p className="flex top-8 border border-transparent hover:border-gray-500/50 py-1 px-2 rounded-lg font-semibold mb-6">{activeChat.name}</p>
+            <p className="flex top-8 border border-transparent hover:border-gray-500/50 py-1 px-2 rounded-lg font-semibold mb-6">{activeChat?.name}</p>
             {
-              messages.map((msg, index) => (
+              activeChat && messages.map((msg, index) => (
                 <Message key={index} role={msg.role} content={msg.content} />
               ))
             }

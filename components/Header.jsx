@@ -5,7 +5,7 @@ import React, { useEffect } from 'react'
 
 const Header = ({ expand, setExpand }) => {
 
-      const { freeRequests } = useAppContext();
+      const { freeRequests,user } = useAppContext();
     
      
 
@@ -20,8 +20,10 @@ const Header = ({ expand, setExpand }) => {
                 />
             </div>
 
-            <h2 className="text-lg font-semibold text-white">DeepSeek 
-                <span>({freeRequests}/5)</span>
+            <h2 className="text-lg font-semibold text-white">
+                Ask anything 
+                {!user  && <span>({freeRequests}/5)</span>}
+                
             </h2>
             <div className="md:hidden ">
                 <Image className=" opacity-70" alt="" src={assets.chat_icon} />

@@ -11,9 +11,9 @@ export const useAppContext = () => {
 };
 
 export const AppContextProvider = ({ children }) => {
-  const { user } = useUser();
+  const { user,isLoaded } = useUser();
 
-  console.log("Clerk User:", user);
+  console.log("Clerk User:", user,isLoaded);
   const {getToken} = useAuth();
 
   const [chats,setChats] = useState([]);
@@ -72,7 +72,18 @@ export const AppContextProvider = ({ children }) => {
   useEffect(() => {
     if (user) {
       setLoadingChats(true);
-      fetchUserChats().finally(() => setLoadingChats(false));
+      fetchUserChats();
+    }
+    
+    if(!user){
+      // setLoadingChats(false)
+      setActiveChat(null)
+      setChats([])
+      
+    }
+
+    return()=>{
+      
     } 
   }, [user]);
 
