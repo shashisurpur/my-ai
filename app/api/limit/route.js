@@ -14,7 +14,14 @@ export async function GET(req) {
         if (!guest) {
             return NextResponse.json({ success: true, requests: 0 }, { status: 200 })
         }
-
+        const now = new Date();
+        const diffHours = (now - guest.lastRequest) / (1000 * 60 * 60);
+        if (diffHours >= 24) {
+            guest.count = 0;
+            guest.lastRequest = now;
+            // await guest.save();
+        }
+        await guest.save()
         return NextResponse.json({ success: true, requests: guest.count }, { status: 200 })
     } catch (err) {
         console.error(err);
