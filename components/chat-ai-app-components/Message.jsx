@@ -85,7 +85,7 @@ const Message = ({ role, content }) => {
                 alt=""
                 className="w-9 h-9 p-1 border border-white/15 rounded-full"
               />
-              <div className="space-y-4 w-full overflow-scroll">
+              <div className="space-y-4 w-full ">
                 <Markdown>{content}</Markdown>
               </div>
             </>

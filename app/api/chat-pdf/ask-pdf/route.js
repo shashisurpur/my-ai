@@ -14,6 +14,24 @@ function cosineSimilarity(a, b) {
     return dot / (magA * magB);
 }
 
+const generateWithRetry = async(model, prompt,retries = 3) => {
+    for (let i = 0; i < retries; i++) {
+        try {
+            const result = await model.generateContent(prompt);
+            const answer = result.response.text();
+            return answer
+        } catch (err) {
+            if (err.message.includes("503") && i < retries - 1) {
+                const wait = Math.pow(2, i) * 1000; // 1s, 2s, 4s...
+                console.warn(`Gemini overloaded, retrying in ${wait / 1000}s...`);
+                await new Promise((r) => setTimeout(r, wait));
+            } else {
+                throw err;
+            }
+        }
+    }
+}
+
 export async function POST(req) {
     const { question } = await req.json();
 
@@ -85,9 +103,9 @@ ${context}
 Question: ${question}
 `;
 
-    const result = await model.generateContent(prompt);
-    const answer = result.response.text();
-
+    // const result = await model.generateContent(prompt);
+    // const answer = result.response.text();
+    const answer = await generateWithRetry(model,prompt)
     await client.close();
 
 
