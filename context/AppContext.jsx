@@ -81,29 +81,29 @@ export const AppContextProvider = ({ children }) => {
   }
 
 
-  useEffect(() => {
-    if (user) {
-      setLoadingChats(true);
-      fetchUserChats();
-    }
+  // useEffect(() => {
+  //   if (user) {
+  //     setLoadingChats(true);
+  //     fetchUserChats();
+  //   }
 
-    if (!user) {
-      // setLoadingChats(false)
-      setActiveChat(null)
-      setChats([])
+  //   if (!user) {
+  //     // setLoadingChats(false)
+  //     setActiveChat(null)
+  //     setChats([])
 
-    }
-    return () => {
+  //   }
+  //   return () => {
 
-    }
-  }, [user]);
+  //   }
+  // }, [user]);
 
 
-  useEffect(() => {
-    if (!user) {
-      getGuestLimit()
-    }
-  }, [])
+  // useEffect(() => {
+  //   if (!user) {
+  //     getGuestLimit()
+  //   }
+  // }, [])
 
   const value = {
     user,
@@ -116,6 +116,8 @@ export const AppContextProvider = ({ children }) => {
     fetchUserChats,
     freeRequests,
     setFreeRequests,
+    setLoadingChats,
+    getGuestLimit
   };
   console.log(freeRequests, 'free')
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

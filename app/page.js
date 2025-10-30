@@ -1,64 +1,112 @@
 "use client";
 
-import { assets } from "@/assets/assets";
-import Header from "@/components/Header";
-import Message from "@/components/Message";
-import PromptBox from "@/components/PromptBox";
-import Sidebar from "@/components/Sidebar";
-import { useAppContext } from "@/context/AppContext";
-import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+
+
+
+
 
 export default function Home() {
-  const [expand, setExpand] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [messages, setMessages] = useState([]);
 
-  const { activeChat, freeRequests, loadingChats } = useAppContext();
-  const containerRef = useRef(null);
-  console.log(activeChat, 'activeChats')
+  const router = useRouter();
+
+  const cards = [
+    {
+      title: "Chat Bot",
+      description: "An AI-powered assistant that can chat, answer questions, and help with tasks in real time.",
+      path: "/chat-ai"
+    },
+    {
+      title: "PDF Chat",
+      description: "Upload a PDF and have an intelligent conversation with its contents — great for summaries or Q&A.",
+      path: "/chat-with-pdf"
+
+    },
+    {
+      title: "Quiz AI",
+      description: "Automatically generate engaging quizzes using AI for learning, testing, or fun challenges.",
+      path: "/quize-app"
+
+    },
+    {
+      title: "Quiz with PDF",
+      description: "Upload a PDF and let AI create quizzes based on its content to test your understanding instantly.",
+      path: "/quiz-pdf-app"
+
+    },
+    {
+      title: "AI Content Rewriter",
+      description: "Coming soon",
+      path: "/"
+
+    },
+  ];
 
   useEffect(() => {
-    if (activeChat) {
-      setMessages(activeChat.messages);
-    } else {
-      setMessages([])
-    }
-
-  }, [activeChat]);
-
-  useEffect(() => {
-    if (containerRef.current) {
-      containerRef.current.scrollTo({
-        top: containerRef.current.scrollHeight,
-        behavior: "smooth",
-      })
-    }
-  }, [activeChat]);
+    router.prefetch("/chat-ai");
+    router.prefetch("/chat-with-pdf");
+    router.prefetch("/quize-app");
+    router.prefetch("/quiz-pdf-app");
 
 
+  }, [router]);
+
+  const handleCardClick = (path) => {
+    router.push(`${path}`);
+
+  }
 
   return (
-    <div className="flex h-screen">
-      {/* Sidebar */}
-      <Sidebar expand={expand} setExpand={setExpand} />
+    <div >
+      <div className="text-center sticky top-0 z-50 bg-[#292a2d] text-white p-4 shadow-2xl">
+        <p className="text-3xl"> LEARN WITH AI</p>
+      </div>
+
+      <div className="min-h-screen bg-[#292a2d] flex items-center justify-center p-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full max-w-3xl">
+
+          {cards.map((card, i) => (
+            <div
+              key={i}
+              onClick={() => handleCardClick(card.path)}
+              className="bg-[#1e1f22] rounded-xl p-8 text-center text-white shadow-lg transform transition duration-300 hover:scale-105 hover:shadow-[0_0_20px_rgba(255,255,255,0.2)] cursor-pointer"
+            >
+              <h2 className="text-2xl font-semibold mb-3">{card.title}</h2>
+              <p className="text-gray-300 text-sm">{card.description}</p>
+            </div>
+          ))}
+          {/* <div
+            className="bg-[#1e1f22] rounded-xl p-8 text-center text-white shadow-lg transform transition duration-300 hover:scale-105 hover:shadow-[0_0_20px_rgba(255,255,255,0.2)] cursor-pointer"
+          >
+            <h2 className="text-xl font-semibold mb-2">Chat Bot</h2>
+            <p className="">This is card number {1}.</p>
+          </div> */}
+
+
+        </div>
+      </div>
+
+
+      {/* <div className="bg-[#292a2d] text-white ">
+
+       
+        <div className="flex flex-col justify-center items-center h-screen gap-8">
+          <button className="p-2 bg-blue-500 rounded w-3xs cursor-pointer hover:bg-blue-600"
+            onClick={() => router.push('/chat-ai')}
+          >
+            Chat Bot
+          </button>
+          <button className="p-2 bg-amber-500 rounded w-3xs cursor-pointer hover:bg-amber-600 "
+            onClick={() => router.push('/quize-app')}
+          >
+            AI Quiz
+          </button>
+        </div>
+      </div> */}
+      {/* <Sidebar expand={expand} setExpand={setExpand} />
       <div className="flex-1 flex flex-col items-center justify-center px-4 pb-8 bg-[#292a2d] text-white relative">
-        {/* <div className="absolute px-4 top-6 flex items-center justify-between w-full">
-          <div className="md:hidden">
-            <Image
-              onClick={() => (expand ? setExpand(false) : setExpand(true))}
-              className="rotate-180"
-              alt=""
-              src={assets.menu_icon}
-            />
-          </div>
-
-          <Header />
-          <div className="md:hidden ">
-            <Image className=" opacity-70" alt="" src={assets.chat_icon} />
-          </div>
-
-        </div> */}
+        
         <Header expand={expand} setExpand={setExpand} />
         {messages.length === 0 && !activeChat ? (
           <>
@@ -69,23 +117,10 @@ export default function Home() {
             {
               freeRequests === 5 ?
                 <>
-                  {/* <div className="inline-flex items-center justify-center gap-2 bg-yellow-100 text-yellow-800 text-sm font-medium px-3 py-1.5 rounded-md border border-yellow-300 w-1xl">
-                    <svg
-                      className="w-4 h-4 text-yellow-800"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l6.518 11.591c.75 1.333-.213 2.99-1.743 2.99H3.482c-1.53 0-2.493-1.657-1.743-2.99L8.257 3.1zm1.743 4.401a.75.75 0 00-1.5 0v3.25a.75.75 0 001.5 0V7.5zm-.75 7a1 1 0 100-2 1 1 0 000 2z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                    {'Please login to continue your chat'}
-                  </div> */}
+                 
 
                   <div className="inline-flex items-center justify-center gap-2 bg-red-100 text-red-800 text-sm font-medium p-4 rounded-md border border-red-300 ">
-                    {/* Error Icon: Circle with X */}
+                  
                     <svg
                       className="w-4 h-4 text-red-600"
                       fill="currentColor"
@@ -116,7 +151,7 @@ export default function Home() {
                 <Message key={index} role={msg.role} content={msg.content} />
               ))
             }
-            {/* <Message role={"user"} content={"what is js"} /> */}
+           
             {
               loading && (
                 <div
@@ -136,12 +171,12 @@ export default function Home() {
           </div>
         )}
 
-        {/* Prompt Box */}
         <PromptBox loading={loading} setLoading={setLoading} />
         <p className="text-xs bottom-1 absolute text-gray-500">
           AI-generated, for reference only
         </p>
-      </div>
+      </div> */}
+
     </div>
   );
 }
